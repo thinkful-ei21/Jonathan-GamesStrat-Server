@@ -22,7 +22,7 @@ app.use(
   })
 );
 
-app.get('/api/GameStrat', (req, res, next) => {
+app.get('/api/games', (req, res, next) => {
   return res.json({
     games: ['Halo', 'Fortnite', 'Call of Duty', 'Pac-Man', 'Super Mario Bros.']
   });
