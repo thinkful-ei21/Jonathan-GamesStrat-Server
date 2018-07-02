@@ -26,7 +26,6 @@ app.get('/api/games', (req, res, next) => {
   return res.json({
     games: [
       'Halo',
-      'Halo 2',
       'Zelda',
       'Fortnite',
       'Call of Duty',
