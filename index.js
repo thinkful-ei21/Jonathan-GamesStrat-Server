@@ -16,11 +16,12 @@ app.use(
   })
 );
 
-app.use(
-  cors({
-    origin: CLIENT_ORIGIN
-  })
-);
+app.options('*', cors());
+// app.use(
+//   cors({
+//     origin: CLIENT_ORIGIN
+//   })
+// );
 
 app.get('/api/games', (req, res, next) => {
   return res.json({
