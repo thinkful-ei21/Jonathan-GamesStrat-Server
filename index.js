@@ -24,7 +24,14 @@ app.use(
 
 app.get('/api/games', (req, res, next) => {
   return res.json({
-    games: ['Halo', 'Fortnite', 'Call of Duty', 'Pac-Man', 'Super Mario Bros.']
+    games: [
+      'Halo',
+      'Zelda',
+      'Fortnite',
+      'Call of Duty',
+      'Pac-Man',
+      'Super Mario Bros.'
+    ]
   });
 });
 
