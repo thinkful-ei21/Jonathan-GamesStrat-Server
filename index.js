@@ -16,17 +16,16 @@ app.use(
   })
 );
 
-app.options('*', cors());
-// app.use(
-//   cors({
-//     origin: CLIENT_ORIGIN
-//   })
-// );
+// app.options('*', cors()); {
+//   origin: CLIENT_ORIGIN
+// }
+app.use(cors());
 
 app.get('/api/games', (req, res, next) => {
   return res.json({
     games: [
       'Halo',
+      'Halo 2',
       'Zelda',
       'Fortnite',
       'Call of Duty',
