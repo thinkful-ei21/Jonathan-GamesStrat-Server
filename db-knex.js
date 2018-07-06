@@ -2,11 +2,11 @@
 
 const createKnex = require('knex');
 
-const {DATABASE_URL} = require('./config');
+const { MONGODB_URI } = require('./config');
 
 let knex = null;
 
-function dbConnect(url = DATABASE_URL) {
+function dbConnect(url = MONGODB_URI) {
   knex = createKnex({
     client: 'pg',
     connection: url
