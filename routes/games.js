@@ -22,4 +22,13 @@ router.get('/', (req, res, next) => {
     .catch(err => next(err));
 });
 
+router.get('/:id', (req, res, next) => {
+  const { id } = req.params;
+
+  client
+    .games({ ids: [id] }, ['id', 'name', 'cover', 'summary', 'total_rating'])
+    .then(apiRes => res.json(apiRes.body))
+    .catch(err => next(err));
+});
+
 module.exports = router;

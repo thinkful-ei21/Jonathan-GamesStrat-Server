@@ -12,8 +12,12 @@ const router = express.Router();
 // GET all
 router.get('/', (req, res, next) => {
   const { searchTerm, gameId, userId } = req.query;
-
+  console.log('req.query', req.query);
+  console.log('searchTerm', searchTerm);
+  console.log('gameId', gameId);
+  console.log('userId', userId);
   const filter = {};
+  console.log('filter', filter);
 
   if (gameId) {
     filter.gameId = gameId;
@@ -27,10 +31,12 @@ router.get('/', (req, res, next) => {
     const re = new RegExp(searchTerm, 'i');
     filter.$or = [{ title: re }, { content: re }];
   }
-
   Strat.find(filter)
     .sort({ updatedAt: 'desc' })
-    .then(results => res.json(results))
+    .then(results => {
+      // console.log(results);
+      res.json(results);
+    })
     .catch(err => next(err));
 });
 
@@ -57,13 +63,15 @@ router.get('/:id', (req, res, next) => {
 
 //Post a new strategy
 router.post('/', jwtPassport, (req, res, next) => {
-  let { title, content, gameId } = req.body;
+  let { title, strat, gameId } = req.body;
+  console.log(req.body);
   const userId = req.user.id;
-  const strategy = { title, content, userId, gameId };
+  const strategy = { title, strat, gameId, userId };
+  console.log(strategy);
   Strat.create(strategy)
     .then(result => res.status(201).json(result))
     .catch(err => {
-      console.log(err);
+      // console.log(err);
       // Forward validation errors on to the client, otherwise give a 500
       // error because something unexpected has happened
       if (err.reason === 'ValidationError') {
@@ -109,6 +117,7 @@ router.put('/:id', jwtPassport, (req, res, next) => {
 //Delete
 router.delete('/:id', jwtPassport, (req, res, next) => {
   const { id } = req.params;
+  console.log(id);
   const userId = req.user.id;
 
   /***** Never trust users - validate input *****/
