@@ -60,8 +60,22 @@ router.post('/', jwtPassport, (req, res, next) => {
   let { title, content, gameId } = req.body;
   const userId = req.user.id;
   const strategy = { title, content, gameId, userId };
+  const validator = { title, gameId, userId };
 
-  Strat.create(strategy)
+  return Strat.findOne(validator)
+    .count()
+    .then(count => {
+      if (count > 0) {
+        return Promise.reject({
+          code: 422,
+          reason: 'ValidationError',
+          message: 'Cannot create a duplicate title',
+          location: 'title'
+        });
+      }
+      return Strat.create(strategy);
+    })
+
     .then(result => res.status(201).json(result))
     .catch(err => {
       console.log(err);
