@@ -2,22 +2,17 @@
 
 const express = require('express');
 const mongoose = require('mongoose');
-const passport = require('passport');
 const { jwtPassport } = require('../passports/passports');
 
 const Strat = require('../models/strat');
+const User = require('../models/user');
 
 const router = express.Router();
 
 // GET all
 router.get('/', (req, res, next) => {
-  const { searchTerm, gameId, userId } = req.query;
-  console.log('req.query', req.query);
-  console.log('searchTerm', searchTerm);
-  console.log('gameId', gameId);
-  console.log('userId', userId);
+  const { search, gameId, userId } = req.query;
   const filter = {};
-  console.log('filter', filter);
 
   if (gameId) {
     filter.gameId = gameId;
@@ -27,16 +22,15 @@ router.get('/', (req, res, next) => {
     filter.user = userId;
   }
 
-  if (searchTerm) {
-    const re = new RegExp(searchTerm, 'i');
+  if (search) {
+    const re = new RegExp(search, 'i');
     filter.$or = [{ title: re }, { content: re }];
   }
+
   Strat.find(filter)
+    .populate('userId')
     .sort({ updatedAt: 'desc' })
-    .then(results => {
-      // console.log(results);
-      res.json(results);
-    })
+    .then(results => res.json(results))
     .catch(err => next(err));
 });
 
@@ -63,15 +57,14 @@ router.get('/:id', (req, res, next) => {
 
 //Post a new strategy
 router.post('/', jwtPassport, (req, res, next) => {
-  let { title, strat, gameId } = req.body;
-  console.log(req.body);
+  let { title, content, gameId } = req.body;
   const userId = req.user.id;
-  const strategy = { title, strat, gameId, userId };
-  console.log(strategy);
+  const strategy = { title, content, gameId, userId };
+
   Strat.create(strategy)
     .then(result => res.status(201).json(result))
     .catch(err => {
-      // console.log(err);
+      console.log(err);
       // Forward validation errors on to the client, otherwise give a 500
       // error because something unexpected has happened
       if (err.reason === 'ValidationError') {
@@ -117,8 +110,9 @@ router.put('/:id', jwtPassport, (req, res, next) => {
 //Delete
 router.delete('/:id', jwtPassport, (req, res, next) => {
   const { id } = req.params;
-  console.log(id);
   const userId = req.user.id;
+
+  const filter = { _id: id, userId };
 
   /***** Never trust users - validate input *****/
   if (!mongoose.Types.ObjectId.isValid(id)) {
@@ -127,10 +121,8 @@ router.delete('/:id', jwtPassport, (req, res, next) => {
     return next(err);
   }
 
-  Strat.findOneAndRemove({ _id: id, userId })
-    .then(() => {
-      res.sendStatus(204);
-    })
+  Strat.findOneAndRemove(filter)
+    .then(() => res.sendStatus(204))
     .catch(err => next(err));
 });
 
