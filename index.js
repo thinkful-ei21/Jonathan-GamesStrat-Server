@@ -31,7 +31,7 @@ passport.use(jwtStrategy);
 
 app.use('/api/users/', usersRouter);
 app.use('/api/auth/', authRouter);
-app.use('/api/games/', gamesRouter);
+app.use('/api/', gamesRouter);
 app.use('/api/strats/', stratRouter);
 
 // Custom 404 Not Found route handler
