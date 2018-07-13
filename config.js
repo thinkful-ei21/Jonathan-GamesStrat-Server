@@ -6,7 +6,7 @@ module.exports = {
   PORT: process.env.PORT || 8080,
 
   JWT_SECRET: process.env.JWT_SECRET,
-  JWT_EXPIRY: process.env.JWT_EXPIRY || '7d',
+  JWT_EXPIRY: process.env.JWT_EXPIRY || '6h',
 
   CLIENT_ORIGIN: process.env.CLIENT_ORIGIN || 'http://localhost:3000',
   IGDB_API_KEY: process.env.IGDB_API_KEY,
